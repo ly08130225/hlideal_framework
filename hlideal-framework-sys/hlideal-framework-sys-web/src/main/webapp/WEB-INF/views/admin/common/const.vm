@@ -1,0 +1,3 @@
+#set($ctxStatic="/static/admin")
+#set($ctx="/admin")
+#set($dicsearchurl= $ctx + "/backstage/sys/dic/queryDicList02.htm")

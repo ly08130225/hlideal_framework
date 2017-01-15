@@ -1,0 +1,73 @@
+#parse("/admin/common/header-title.vm")
+<link rel="stylesheet" href="${ctxStatic}/css/jquery/jquery-ui.min.css">
+<link rel="stylesheet" href="${ctxStatic}/css/style.css"/>
+<body>
+	<div class="container">
+  		  <div style="padding:100px 100px;font-size: 28px; text-align:center;">欢迎进入**管理系统</div>
+  		  <div>
+			  <form action="javascript:void(0);" id="search" class="yui-form">
+				   <dl class="form-item">
+					<dt class="title sptitle">编码:</dt>
+						<dd class="detail">
+							<label>
+								<input id="checkbox2" type="hidden"
+					   data-data="[{'id':'0','text':'男'},{'id':'1','text':'女'},
+					   {'id':'2','text':'其他'}]"
+						data-valuefield="id" data-textfield="text"
+							 data-multiple="true"
+					   class="yui-combobox" style="display: none;">
+							</label>
+						</dd>
+					</dl>
+
+				    <dl class="form-item">
+						<dt class="title sptitle">dd:</dt>
+						<dd class="detail">
+							<label>
+								<input id="treeDemo3" type="hidden" class="zd-commobox"/>
+							</label>
+						</dd>
+					</dl>
+			  </form>
+  		  </div>
+
+	</div>
+	
+<script>
+	var uri_delRole = '${ctx}/backstage/sys/dic/dicDeleteData.htm';
+	seajs.use(['jquery', 'yrkj/jquery.yrkj.form', 'yrkj/jquery.yrkj.combobox','yrkj/jquery.yrkj.combotree'],
+				function($,YUI,YCombobox,YComboTree){
+		//seajs start		
+		$(function() {			
+	        $.YUI.init();
+	        var valuew = '1,2';
+			$("#checkbox2").YCombobox('setValues','1,2'); 
+			//$("#checkbox2").YCombobox('setValues','0'); 
+			
+			
+			var zNodes2 = [
+				{idkey:1, roleid: "r1", parentid: 0, rolename: " 1"},
+				{idkey:11, roleid: "r11", parentid: 1, rolename: " 1-1"},
+				{idkey:111, roleid: "r111", parentid: 11, rolename: " 1-1-1"},
+				{idkey:112, roleid: "r112", parentid: 11, rolename: " 1-1-2"},
+				{idkey:12, roleid: "r12", parentid: 1, rolename: " 1-2"},
+				{idkey:121, roleid: "r121", parentid: 12, rolename: " 1-2-1"},
+				{idkey:122, roleid: "r122", parentid: 12, rolename: " 1-2-2"},
+				{idkey:2, roleid: "r2", parentid: 0, rolename: " 2"},
+				{idkey:21, roleid: "r21", parentid: 2, rolename: " 2-1"},
+				{idkey:22, roleid: "r22", parentid: 2, rolename: " 2-2"},
+				{idkey:221, roleid: "r221", parentid: 22, rolename: " 2-2-1"},
+				{idkey:222, roleid: "r222", parentid: 22, rolename: " 2-2-2"},
+				{idkey:23, roleid: "r23", parentid: 2, rolename: " 2-3"}
+			];
+		
+			$("#treeDemo3").YComboTree({data: zNodes2, idFiled: "idkey",parentIdField: "parentid"
+				,valueField: "roleid", textField: "rolename", parentValue:false, expandAll: true, multiple: true});
+			$("#treeDemo3").YComboTree('setValues','r1,r11,r111');
+		});
+		
+	//end seajs	
+	});
+  </script>
+	
+</body>

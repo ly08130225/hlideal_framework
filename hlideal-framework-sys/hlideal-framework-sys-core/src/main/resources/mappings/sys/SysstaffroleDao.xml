@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hlideal.framework.core.dao.SysstaffroleDao">
+
+	<sql id="sysstaffroleColumns">
+		a.staffid AS "staffid",
+		a.roleid AS "roleid"
+	</sql>
+	
+	<sql id="sysstaffroleJoins">
+		
+	</sql>
+	
+	<select id="get" resultType="Sysstaffrole">
+		SELECT 
+		<include refid="sysstaffroleColumns"/>
+		FROM sysstaffrole a
+		<include refid="sysstaffroleJoins"/>
+		WHERE a.roleid = #{roleid} AND a.staffid = #{staffid}
+	</select>
+	
+	<select id="findList" resultType="Sysstaffrole">
+		SELECT 
+		<include refid="sysstaffroleColumns"/>
+		FROM sysstaffrole a
+		<include refid="sysstaffroleJoins"/>
+		<where>
+			1=1
+			${sqlMap.condition}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Sysstaffrole">
+		SELECT 
+			<include refid="sysstaffroleColumns"/>
+		FROM sysstaffrole a
+		<include refid="sysstaffroleJoins"/>
+		<where>
+			1=1
+			${sqlMap.condition}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sysstaffrole(
+			staffid,
+			roleid
+		) VALUES (
+			#{staffid},
+			#{roleid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sysstaffrole SET 	
+			staffid = #{staffid},
+			roleid = #{roleid}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sysstaffrole SET 
+			deleteflag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteBystaffid">
+		delete from sysstaffrole
+		WHERE staffid = #{staffid}
+	</update>
+		
+</mapper>

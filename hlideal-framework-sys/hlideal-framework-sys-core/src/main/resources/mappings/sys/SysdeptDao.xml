@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hlideal.framework.core.dao.SysdeptDao">
+
+	<sql id="sysdeptColumns">
+		a.id AS "id",
+		a.parentid AS "parentid",
+		a.depttype AS "depttype",
+		a.deptno AS "deptno",
+		a.deptname AS "deptname",
+		a.managerid AS "managerid",
+		a.tempmanagerids AS "tempmanagerids",
+		a.supermanagerid AS "supermanagerid",
+		a.remark AS "remark",
+		a.deleteflag AS "deleteflag",
+		a.createid AS "createid",
+		a.createname AS "createname",
+		a.createdate AS "createdate",
+		a.updatename AS "updatename",
+		a.updatedate AS "updatedate",
+		a.var01 AS "var01",
+		a.var02 AS "var02",
+		a.var03 AS "var03",
+		a.var04 AS "var04",
+		a.var05 AS "var05"
+	</sql>
+	
+	<sql id="sysdeptJoins">
+		
+	</sql>
+	
+	<select id="get" resultType="Sysdept">
+		SELECT 
+		<include refid="sysdeptColumns"/>
+		FROM sysdept a
+		<include refid="sysdeptJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Sysdept">
+		SELECT 
+		<include refid="sysdeptColumns"/>
+		FROM sysdept a
+		<include refid="sysdeptJoins"/>
+		<where>
+			1=1 AND a.deleteflag != #{DEL_FLAG_DELETE}
+			${sqlMap.condition}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Sysdept">
+		SELECT 
+			<include refid="sysdeptColumns"/>
+		FROM sysdept a
+		<include refid="sysdeptJoins"/>
+		<where>
+			1=1 AND a.deleteflag != #{DEL_FLAG_DELETE}
+			${sqlMap.condition}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sysdept(
+			id,
+			parentid,
+			depttype,
+			deptno,
+			deptname,
+			managerid,
+			tempmanagerids,
+			supermanagerid,
+			remark,
+			deleteflag,
+			createid,
+			createname,
+			createdate,
+			updatename,
+			updatedate,
+			var01,
+			var02,
+			var03,
+			var04,
+			var05
+		) VALUES (
+			#{id},
+			#{parentid},
+			#{depttype},
+			#{deptno},
+			#{deptname},
+			#{managerid},
+			#{tempmanagerids},
+			#{supermanagerid},
+			#{remark},
+			#{deleteflag},
+			#{createid},
+			#{createname},
+			#{createdate},
+			#{updatename},
+			#{updatedate},
+			#{var01},
+			#{var02},
+			#{var03},
+			#{var04},
+			#{var05}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sysdept SET 	
+			parentid = #{parentid},
+			depttype = #{depttype},
+			deptno = #{deptno},
+			deptname = #{deptname},
+			managerid = #{managerid},
+			tempmanagerids = #{tempmanagerids},
+			supermanagerid = #{supermanagerid},
+			remark = #{remark},
+			deleteflag = #{deleteflag},
+			createid = #{createid},
+			createname = #{createname},
+			createdate = #{createdate},
+			updatename = #{updatename},
+			updatedate = #{updatedate},
+			var01 = #{var01},
+			var02 = #{var02},
+			var03 = #{var03},
+			var04 = #{var04},
+			var05 = #{var05}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sysdept SET 
+			deleteflag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+		
+</mapper>

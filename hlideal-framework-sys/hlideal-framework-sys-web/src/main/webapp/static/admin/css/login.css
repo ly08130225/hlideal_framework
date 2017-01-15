@@ -1,0 +1,213 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+body{
+	font-family:"Microsoft YaHei",Arial,Helvetica,sans-serif,"宋体";
+	background-color: #162718;
+	background-size: cover;
+}
+.yrkj-login-con{
+	width: 480px;
+	overflow: hidden;
+	position: relative;
+	margin:10% auto auto auto;
+	font-family: "Microsoft YaHei";
+}
+.yrkj-login-con .logo{
+	font-size: 24px;
+	font-weight: 100;
+	font-family: "Microsoft YaHei";
+	background:url(../images/login/login-logo.png) center no-repeat;
+	color: #fff;
+	height: 90px;
+	width: 480px;
+	line-height: 90px;
+	text-align: center;
+	overflow: hidden;
+}
+.login-detail-bg{
+	width: 480px;
+	height: 360px;
+	/*margin-top:20px;*/
+	/*padding: 0 28px;*/
+	background: #000;
+	/*position: relative;*/
+	filter:alpha(opacity=10);
+	-moz-opacity:0.10;
+	-khtml-opacity: 0.10;
+	opacity: 0.10;
+	overflow: hidden;
+}
+.login-detail{
+	font-family: "Microsoft YaHei";
+	position: absolute;
+	left: 40px;
+	top: 90px;
+}
+.login-detail h2{
+	margin-top:40px;
+	font-size: 18px;
+	font-weight: normal;
+	color: #fff;
+}
+.mt30{
+	margin-top: 30px;
+}
+.login-dl{
+	margin-top: 20px;
+}
+.login-dl,.login-detail-bot{
+	position:fixed;
+}
+.login-dl p{
+	font-size: 14px;
+	color: #fff;
+	line-height: 24px;
+	height: 24px;
+	overflow: hidden;
+}
+
+.login-dl-dd{
+	position: relative;
+	left: 0;
+	top: 24px;
+	width: 480px;
+}
+.login-username i{
+	width: 20px;
+	height: 20px;
+	margin: 10px 15px auto;
+	position: absolute;
+	font-size: 0;
+	background:url(../images/login/login-username.png) center 3px no-repeat;
+}
+
+.login-dl-dd .login-input{
+	width: 250px;
+	height: 45px;
+	color: #999;
+	font-size: 16px;
+	background:#fff;
+	border: 1px solid #000;
+	border-radius: 5px;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	padding-left: 50px;
+	font-family: "Microsoft YaHei";
+}
+
+.login-password{
+	margin-top: 30px;
+}
+.login-password i{
+	width: 20px;
+	height: 20px;
+	margin: 10px 15px auto;
+	position: absolute;
+	background:url(../images/login/login-password.png) center 3px no-repeat;
+}
+.login-remember{
+	position: relative;
+	margin-top: 20px;
+}
+.login-remember .re-div{
+	padding-top: 1px;
+	float: left;
+}
+.login-remember .remember{
+	width: 18px;
+	height: 18px;
+	margin: 0 auto;
+	float: left;
+}
+
+.login-remember span{
+	margin:0 5px auto;
+	height: 23px;
+	color: #fff;
+	float: left;
+	font-size:16px;
+}
+.login-submit{
+	margin-top: 20px;
+}
+.login-submit .login-botton{
+	width: 250px;
+	height: 45px;
+	line-height: 45px;
+	border: 1px #f37936 solid;
+	background: #f37936;
+	font-size: 18px;
+	color: #fff;
+	cursor: pointer;
+	border-radius: 5px;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	word-spacing:10px;
+	letter-spacing: 10px;
+	font-family: "Microsoft YaHei";
+}
+.login-submit .login-botton:hover{
+	background: #f60;
+}
+
+
+.login-a{
+	background:url(../images/login/login-error-bg.png) center no-repeat;
+	margin-top: 25px;
+	width: 350px;
+	height: 50px;
+	/*text-align: center;*/
+}
+
+.login-error{
+	height: 60px;
+	width: 350px;
+}
+.login-error .auth-error{
+	color: #ff0000;
+	position: absolute;
+	margin-top: 3px;
+	margin-left:40px;
+	text-align: left;
+	font-size: 14px;
+}
+
+.login-a a{
+	display:inline-block;
+	color: #fff;
+	font-size: 12px;
+}
+.yrkj-login-footer{
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	bottom: 30px;
+
+
+}
+.yrkj-login-footer span{
+	font-family: "Tahoma";
+	font-size: 14px;
+	color: #fff4f3;
+
+}
+.yrkj-login-footer span a{
+	display:inline-block;
+	font-family: "Tahoma";
+	color: #fff4f3;
+	font-size: 14px;
+}
+a:link{
+	text-decoration:none;
+}
+a:visited{
+	text-decoration:none;
+}
+a:hover{
+	text-decoration:none;
+}
+a:active{
+	text-decoration:none;
+}

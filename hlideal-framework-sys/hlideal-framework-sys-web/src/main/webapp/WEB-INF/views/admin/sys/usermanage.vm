@@ -1,0 +1,380 @@
+#parse("/admin/common/header-title.vm")
+<link rel="stylesheet" href="${ctxStatic}/css/jquery/jquery-ui.min.css">
+<link rel="stylesheet" href="${ctxStatic}/css/style.css"/>
+
+<body>
+<div class="yrkj-tabnav-content">
+	
+	<div class="search-bg">
+	    <form action="" class="yui-form">
+	        <dl class="form-item">
+	            <dt class="title">姓名：</dt>
+	            <dd class="detail">
+	                <label>
+	                    <input type="text" class="yui-input" name="name"  id="search_name" />
+	                </label>
+	            </dd>
+	        </dl>
+	        <dl class="form-item">
+	            <dt class="title"></dt>
+	            <dd class="detail">
+	                <button type="button" class="yrkj-btn btn-blue" id="btn-search">搜索</button>
+                	<button type="reset" class="yrkj-btn btn-gray">重置</button>
+	            </dd>
+	        </dl>  
+	    </form>
+	</div>
+	<table id="tb-dbdatagrid" class="yui-datagrid table-list" zdata-options={"url":"${ctx}/backstage/sys/queryStaffList.htm?jsonCallBack=?","fitColumns":true,"singleSelect":false,"pagination":true,"rowcheck":true,"rownumbers":true,"rows":10,"idField":"id","toolbar":"#btn-applylist","tableCls":"table-list"}>
+        <thread>
+	    <tr>
+	        <th data-options="field:loginname">用户名</th>
+	        <th data-options="field:name">姓名</th>
+	        <th data-options="field:mobilephone">手机</th>
+	        <th data-options="field:loginflag" formatter="enableFormatter">允许登录</th>
+	    </tr>
+	    </thread>
+	</table>
+	<div id="btn-applylist" >
+        <a class="yui-toolbar" id="btn-add"  text="增加" iconCls="icon-blue06" buttonCls="btn-operateblue" handler="doNew"></a>
+        <a class="yui-toolbar" id="btn-modify" text="修改" iconCls="icon-blue06" buttonCls="btn-operateblue" handler="doEdit"></a>
+        <a class="yui-toolbar" id="btn-del" text="删除" iconCls="icon-blue06" buttonCls="btn-operateblue" handler="doDel"></a> 
+        <a class="yui-toolbar" id="btn-roleset" text="角色设置" iconCls="icon-blue06" buttonCls="btn-operateblue" handler="doRoleset"></a> 
+        <a class="yui-toolbar" id="btn-dicset01" text="节点配置" iconCls="icon-blue06" buttonCls="btn-operateblue" handler="doDicset01"></a> 
+        <a class="yui-toolbar" id="btn-dicset02" text="类别配置" iconCls="icon-blue06" buttonCls="btn-operateblue" handler="doDicset02"></a> 
+        <a class="yui-toolbar" id="btn-dicset03" text="销售来源配置" iconCls="icon-blue06" buttonCls="btn-operateblue" handler="doDicset03"></a> 
+        <a class="yui-toolbar" id="btn-dicset04" text="代理商配置" iconCls="icon-blue06" buttonCls="btn-operateblue" handler="doDicset04"></a> 
+    </div>
+</div>
+
+<div id="staff_form_window" style="display: none;">
+	<div class="clearfix mt20">
+		<form id="staff_form"  class="yui-form" method="post" enctype="multipart/form-data"  zdata-options={"url":"${ctx}/backstage/sys/staffSaveData.htm?jsonCallBack=?","callBack":"callBackFn"}>
+			<input type="hidden" name="id" id="id" value=""/>
+			<dl class="form-item">
+				<dt class="title sptitle">员工编号:</dt>
+				<dd class="detail">
+					<label>
+						<input type="text" class="yui-input" id="staffno" name="staffno" />
+					</label>
+				</dd>
+			</dl>
+			<dl class="form-item">
+				<dt class="title sptitle">姓名:</dt>
+				<dd class="detail">
+					<label>
+						<input type="text" class="yui-input yui-validatebox"  validate-type="Require" id="name" name="name" />
+						<i class="require icon-mrequire"></i>
+					</label>
+				</dd>
+			</dl>
+			<dl class="form-item">
+				<dt class="title sptitle">用户名:</dt>
+				<dd class="detail">
+					<label>
+						<input type="text" class="yui-input yui-validatebox"  validate-type="Require" id="loginname" name="loginname" />
+						<i class="require icon-mrequire"></i>
+					</label>
+				</dd>
+			</dl>
+			<dl class="form-item">
+				<dt class="title sptitle">密码:</dt>
+				<dd class="detail">
+					<label>
+						<input type="text" class="yui-input" id="loginpwd" name="loginpwd" />
+					</label>
+				</dd>
+			</dl>			
+			<dl class="form-item">
+				<dt class="title sptitle">手机号码:</dt>
+				<dd class="detail">
+					<label>
+						<input type="text" class="yui-input yui-validatebox"  validate-type="Require" id="mobilephone" name="mobilephone" />
+						<i class="require icon-mrequire"></i>
+					</label>
+				</dd>
+			</dl>
+			<dl class="form-item">
+				<dt class="title sptitle">允许登录:</dt>
+				<dd class="detail">
+					<label>
+						 <input type="hidden" validate-type="Require" id="loginflag" name="loginflag" 
+			            	data-data="[{'id':'1','text':'是'},{'id':'0','text':'否'}]"
+							data-valuefield="id" data-textfield="text" data-defaultvalue="1" class="yui-combobox yui-validatebox">
+						<i class="require icon-mrequire"></i>
+					</label>
+				</dd>
+			</dl>						
+		</form>
+	</div>
+</div>
+<div id="staffroleset_frame_window">
+	<iframe id="staffroleset_frame" scrolling="no" marginwidth="0" width="100%" height="100%" frameborder="0" marginheight="0"></iframe>
+</div>
+
+<div id="staffdicset_frame_window">
+	<iframe id="staffdicset_frame" scrolling="no" marginwidth="0" width="100%" height="100%" frameborder="0" marginheight="0"></iframe>
+</div>
+
+<script>
+	var uri_del_staff = '${ctx}/backstage/sys/staffDeleteData.htm';
+	var uri_staffroleset = '${ctx}/backstage/sys/staffroleset.htm';
+	var uri_staffdicset = '${ctx}/backstage/sys/staffdicset.htm';
+	seajs.use(['jquery', 'yrkj/jquery.yrkj.form', 'yrkj/jquery.yrkj.dialog','yrkj/jquery.yrkj.page.callback','yrkj/jquery.yrkj.message','datepicker'],
+				function($,YUI,Ydialog,CALLBACK,YUI_MESSAGE_CLIENT){
+		//seajs start		
+		$(function() {		
+			$("#staff_form_window").show();
+			$("#staff_form_window").Ydialog({
+	            width: 700,
+	            height: 500,
+	            title: '进度节点编辑',
+	            closed:true,
+	            buttons:[{
+	                id:'message-btn',
+	                text:'确定',
+	                buttonCls:'btn-blue',
+	                handler:function(){
+	                	if($("#id").val() =='' && $("#loginpwd").val()==''){
+	                		$.YMessage.error("错误", '新建用户请设置密码', function () {});
+	                		return;
+	                	}
+	                	$("#staff_form").submit();
+	                }
+	            },{
+	                id:'message-btn',
+	                text:'取消',
+	                buttonCls:'btn-gray',
+	                handler:function(){
+	                	$("#staff_form_window").Ydialog("close");
+	                }
+	            }]
+	        });
+	       
+	       $('#staffroleset_frame_window').Ydialog({
+				width	: 600,  
+			    height	: 400, 
+			    title	: '设置员工角色',
+			    closed	: true,
+			    modal	: true,
+			    fullcontent : true
+			});
+			
+			 $('#staffdicset_frame_window').Ydialog({
+				width	: 600,  
+			    height	: 400, 
+			    title	: '设置基础数据',
+			    closed	: true,
+			    modal	: true,
+			    fullcontent : true
+			});
+	        $.YUI.init();
+			
+		});
+		
+		$("#btn-search").click(function () {
+            doSearch();
+        });
+        
+        function doSearch() {
+        	$('#tb-dbdatagrid').YTable("reload", {
+            	dicvalue:$('#search_dicvalue').val()            	
+            });
+        }
+        
+        CALLBACK.callBackFn=function(data){
+      	    if(data.code){                
+                $.YMessage.info("提示", "操作成功", function () {
+                	//关闭弹出窗
+                	$("#staff_form_window").Ydialog("close");
+                	//重新加载数据
+                	doSearch();
+                });
+            }else{
+            	$.YMessage.error("错误", data.msg, function () {
+            		
+                });
+            }
+		}
+		
+        //新增
+	    CALLBACK.doNew=function(){
+	    	
+	    	//清除
+	    	$('#staff_form')[0].reset();
+			$('#id').val('');
+	    	$("#staff_form_window").Ydialog("open");
+        };
+        
+        //编辑
+        CALLBACK.doEdit=function(){        	
+        	var rows = $('#tb-dbdatagrid').YTable("getSelections");        	
+        	if(rows.length==0){        		
+        		$.YMessage.warning("警告", "请选择记录", function () {});        		
+        		return;        		
+        	} else {
+        		var id = rows[0].id;
+                var staffno = rows[0].staffno;
+                var name = rows[0].name;
+                var loginname = rows[0].loginname;
+                var mobilephone = rows[0].mobilephone;
+                var loginflag = rows[0].loginflag;
+                
+              	//初始化数据
+    			$('#id').val(id);      
+    			$('#staffno').val(staffno);              
+               	$('#name').val(name);
+               	$('#loginname').val(loginname);
+               	$('#loginpwd').val('');
+               	$('#mobilephone').val(mobilephone);
+               	$("#loginflag").YCombobox('setValue',loginflag);     
+                $("#staff_form_window").Ydialog("open");
+        	}
+	    };
+	    
+	  
+        //删除
+	    CALLBACK.doDel= function(){
+	    	
+	    	var rows = $('#tb-dbdatagrid').YTable("getSelections");
+	    	var ids = [];
+            for(var index in rows){
+                ids.push(rows[index]['id']);
+            }
+            
+            if( ids.length ) {            	
+            	$.YMessage.question("确认", "你确定要删除选中的数据？", function () {
+            		var str = '';
+        			for( i in ids ) {
+        				str += ids[i] + ((ids.length - 1) == i ?'':',');
+        			}
+        			        			
+        			$.ajax({
+        				type 		: "POST",
+        				dataType 	: "jsonp",
+        				url 		: uri_del_staff + "?jsonCallBack=?",
+        				data		: {'ids' : str},
+        				success		: function( result ) {
+        					if(result.code){
+        						$.YMessage.info("提示", "删除成功",function(){
+        		       	            //重新加载数据
+        		                	doSearch();
+        		                });
+        		            }else{
+        		            	$.YMessage.error("错误", result.message, function () {});
+        		            }
+        				}
+        			});
+                });
+    		} else {
+    			$.YMessage.warning("警告", "请选择记录", function () {
+    				
+    	        });
+    		}
+	    };
+	    
+	    //编辑
+        CALLBACK.doRoleset=function(){        	
+        	var rows = $('#tb-dbdatagrid').YTable("getSelections");        	
+        	if(rows.length==0){        		
+        		$.YMessage.warning("警告", "请选择记录", function () {});        		
+        		return;        		
+        	} else {
+        		var id = rows[0].id;
+                
+                
+                
+                var params = $.param( { 'staffid' : id } );
+				var url = uri_staffroleset + '?' + params;
+				var $this_window = '#staffroleset_frame';
+				// 为iframe设置src
+				$('#staffroleset_frame').attr('src', url);
+							
+				$("#staffroleset_frame_window").Ydialog("open");
+        	}
+	    };
+	    
+	    //节点设置
+	    CALLBACK.doDicset01=function(){        	
+        	var rows = $('#tb-dbdatagrid').YTable("getSelections");        	
+        	if(rows.length==0){        		
+        		$.YMessage.warning("警告", "请选择记录", function () {});        		
+        		return;        		
+        	} else {
+        		var id = rows[0].id;
+                var params = $.param( { 'staffid' : id, dictype: 'PROCESSNODE' } );
+				var url = uri_staffdicset + '?' + params;
+				var $this_window = '#staffdicset_frame';
+				// 为iframe设置src
+                $('#staffdicset_frame').attr('src', url);
+							
+				$("#staffdicset_frame_window").Ydialog("open");
+        	}
+	    };
+	    
+	     //类别设置
+	    CALLBACK.doDicset02=function(){        	
+        	var rows = $('#tb-dbdatagrid').YTable("getSelections");        	
+        	if(rows.length==0){        		
+        		$.YMessage.warning("警告", "请选择记录", function () {});        		
+        		return;        		
+        	} else {
+        		var id = rows[0].id;
+                var params = $.param( { 'staffid' : id, dictype: 'CLASSTYPE' } );
+				var url = uri_staffdicset + '?' + params;
+				var $this_window = '#staffdicset_frame';
+				// 为iframe设置src
+				$('#staffdicset_frame').attr('src', url);
+							
+				$("#staffdicset_frame_window").Ydialog("open");
+        	}
+	    };
+	    
+	     //销售来源
+	    CALLBACK.doDicset03=function(){        	
+        	var rows = $('#tb-dbdatagrid').YTable("getSelections");        	
+        	if(rows.length==0){        		
+        		$.YMessage.warning("警告", "请选择记录", function () {});        		
+        		return;        		
+        	} else {
+        		var id = rows[0].id;                
+                var params = $.param( { 'staffid' : id, dictype: 'ORDERSOURCE' } );
+				var url = uri_staffdicset + '?' + params;
+				var $this_window = '#staffdicset_frame';
+				// 为iframe设置src
+				$('#staffdicset_frame').attr('src', url);
+							
+				$("#staffdicset_frame_window").Ydialog("open");
+        	}
+	    };
+	    
+	     //代理商
+	    CALLBACK.doDicset04=function(){        	
+        	var rows = $('#tb-dbdatagrid').YTable("getSelections");        	
+        	if(rows.length==0){        		
+        		$.YMessage.warning("警告", "请选择记录", function () {});        		
+        		return;        		
+        	} else {
+        		var id = rows[0].id;
+                var params = $.param( { 'staffid' : id, dictype: 'AGENTTYPE' } );
+				var url = uri_staffdicset + '?' + params;
+				var $this_window = '#staffdicset_frame';
+				// 为iframe设置src
+				$('#staffdicset_frame').attr('src', url);
+							
+				$("#staffdicset_frame_window").Ydialog("open");
+        	}
+	    };
+	    
+	    //字段格式化
+	    CALLBACK.enableFormatter = function(index,val){
+	    	if(val=='1') 
+				return '是';
+			return '否';
+	    };
+        
+		
+	//end seajs	
+	});
+  </script>
+
+</body>

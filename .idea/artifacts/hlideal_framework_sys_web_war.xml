@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="hlideal-framework-sys-web:war">
+    <output-path>$PROJECT_DIR$/hlideal-framework-sys/hlideal-framework-sys-web/target</output-path>
+    <root id="archive" name="hlideal-framework-sys-web.war">
+      <element id="artifact" artifact-name="hlideal-framework-sys-web:war exploded" />
+    </root>
+  </artifact>
+</component>

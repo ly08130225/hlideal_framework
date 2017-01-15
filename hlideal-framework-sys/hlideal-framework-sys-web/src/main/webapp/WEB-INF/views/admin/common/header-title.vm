@@ -1,0 +1,17 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+#parse("/admin/common/const.vm")
+<html>
+<head>
+	<meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>管理系统</title>
+    <meta name="keywords" content="系统"/>
+    <meta name="description" content="系统" />    
+    <script type="text/javascript" src="${ctxStatic}/js/plugin/jquery/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="${ctxStatic}/js/plugin/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${ctxStatic}/js/vendor-modules/sea.js"></script>
+    <script type="text/javascript" src="${ctxStatic}/js/global.js"></script>
+   
+
+</head>
+</html>

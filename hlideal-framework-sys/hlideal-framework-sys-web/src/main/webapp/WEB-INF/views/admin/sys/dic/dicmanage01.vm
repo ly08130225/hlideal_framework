@@ -1,0 +1,214 @@
+#parse("/admin/common/header-title.vm")
+<link rel="stylesheet" href="${ctxStatic}/css/jquery/jquery-ui.min.css">
+<link rel="stylesheet" href="${ctxStatic}/css/style.css"/>
+
+<body>
+<div class="yrkj-tabnav-content">
+	
+	<div class="search-bg">
+	    <form action="" class="yui-form">
+	        <dl class="form-item">
+	            <dt class="title">节点名称：</dt>
+	            <dd class="detail">
+	                <label>
+	                    <input type="text" class="yui-input" name="dicvalue"  id="search_dicvalue" />
+	                </label>
+	            </dd>
+	        </dl>
+	        <dl class="form-item">
+	            <dt class="title"></dt>
+	            <dd class="detail">
+	                <button type="button" class="yrkj-btn btn-blue" id="btn-search">搜索</button>
+                	<button type="reset" class="yrkj-btn btn-gray">重置</button>
+	            </dd>
+	        </dl>  
+	    </form>
+	</div>
+	<table id="tb-dbdatagrid" class="yui-datagrid table-list" zdata-options={"url":"${ctx}/backstage/sys/dic/queryDicList.htm?jsonCallBack=?&catekey=${catekey}","fitColumns":true,"singleSelect":false,"pagination":true,"rowcheck":true,"rownumbers":true,"rows":10,"idField":"id","toolbar":"#btn-applylist","tableCls":"table-list"}>
+        <thead>
+	    <tr>
+	    	<th data-options="field:dickey">序号</th>
+	        <th data-options="field:dicvalue">名称</th>
+	        <th data-options="field:var01">标准时间(小时)</th>
+	    </tr>
+	    </thead>
+	</table>
+	<div id="btn-applylist" >
+        <a class="yui-toolbar" id="btn-add"  text="增加" iconCls="icon-blue06" buttonCls="btn-operateblue" handler="doNew"></a>
+        <a class="yui-toolbar" id="btn-modify" text="修改" iconCls="icon-blue06" buttonCls="btn-operateblue" handler="doEdit"></a>
+        <a class="yui-toolbar" id="btn-del" text="删除" iconCls="icon-blue06" buttonCls="btn-operateblue" handler="doDel"></a> 
+    </div>
+</div>
+
+<div id="dic_form_window" style="display: none;">
+	<div class="clearfix mt20">
+		<form id="dic_form"  class="yui-form" method="post" enctype="multipart/form-data"  zdata-options={"url":"${ctx}/backstage/sys/dic/dicSaveData.htm?jsonCallBack=?","callBack":"callBackFn"}>
+			<input type="hidden" name="id" id="id" value=""/>
+			<input type="hidden" name="catekey" id="catekey" value="${catekey}"/>
+			<dl class="form-item">
+				<dt class="title sptitle">顺序号:</dt>
+				<dd class="detail">
+					<label>
+						<input type="text" class="yui-input yui-validatebox"  validate-type="Require" id="dickey" name="dickey" />
+						<i class="require icon-mrequire"></i>
+					</label>
+				</dd>
+			</dl>
+			<dl class="form-item">
+				<dt class="title sptitle">名称:</dt>
+				<dd class="detail">
+					<label>
+						<input type="text" class="yui-input yui-validatebox"  validate-type="Require" id="dicvalue" name="dicvalue" />
+						<i class="require icon-mrequire"></i>
+					</label>
+				</dd>
+			</dl>
+			<dl class="form-item">
+				<dt class="title sptitle">标准时间:</dt>
+				<dd class="detail">
+					<label>
+						<input type="text" class="yui-input  yui-validatebox" validate-type="Require" id="var01" name="var01" />
+						<i class="require icon-mrequire"></i>
+					</label>
+				</dd>
+			</dl>			
+		</form>
+	</div>
+</div>
+
+
+<script>
+	var uri_delRole = '${ctx}/backstage/sys/dic/dicDeleteData.htm';
+	seajs.use(['jquery', 'yrkj/jquery.yrkj.form', 'yrkj/jquery.yrkj.dialog','yrkj/jquery.yrkj.page.callback','yrkj/jquery.yrkj.message','datepicker'],
+				function($,YUI,Ydialog,CALLBACK,YUI_MESSAGE_CLIENT){
+		//seajs start		
+		$(function() {		
+			$("#dic_form_window").show();
+			$("#dic_form_window").Ydialog({
+	            width: 500,
+	            height: 400,
+	            title: '进度节点编辑',
+	            closed:true,
+	            buttons:[{
+	                id:'message-btn',
+	                text:'确定',
+	                buttonCls:'btn-blue',
+	                handler:function(){
+	                	$("#dic_form").submit();
+	                }
+	            },{
+	                id:'message-btn',
+	                text:'取消',
+	                buttonCls:'btn-gray',
+	                handler:function(){
+	                	$("#dic_form_window").Ydialog("close");
+	                }
+	            }]
+	        });
+	       
+	        $.YUI.init();
+			
+		});
+		
+		$("#btn-search").click(function () {
+            doSearch();
+        });
+        
+        function doSearch() {
+        	$('#tb-dbdatagrid').YTable("reload", {
+            	dicvalue:$('#search_dicvalue').val()            	
+            });
+        }
+        
+        CALLBACK.callBackFn=function(data){
+      	    if(data.code){                
+                $.YMessage.info("提示", "操作成功", function () {
+                	//关闭弹出窗
+                	$("#dic_form_window").Ydialog("close");
+                	//重新加载数据
+                	doSearch();
+                });
+            }else{
+            	$.YMessage.error("错误", data.msg, function () {
+            		
+                });
+            }
+		}
+		
+        //新增
+	    CALLBACK.doNew=function(){
+	    	
+	    	//清除
+	    	$('#dic_form')[0].reset();
+			$('#id').val('');
+	    	$("#dic_form_window").Ydialog("open");
+        };
+        
+        //编辑
+        CALLBACK.doEdit=function(){        	
+        	var rows = $('#tb-dbdatagrid').YTable("getSelections");        	
+        	if(rows.length==0){        		
+        		$.YMessage.warning("警告", "请选择记录", function () {});        		
+        		return;        		
+        	} else {        		
+        		var id = rows[0].id;
+                var dickey = rows[0].dickey;
+                var dicvalue = rows[0].dicvalue;
+                var var01 = rows[0].var01;
+                
+              	//初始化数据
+    			$('#id').val(id);      
+    			$('#dickey').val(dickey);              
+               	$('#dicvalue').val(dicvalue);
+               	$('#var01').val(var01);
+                $("#dic_form_window").Ydialog("open");
+        	}
+	    };
+	    
+	  
+        //删除
+	    CALLBACK.doDel= function(){
+	    	
+	    	var rows = $('#tb-dbdatagrid').YTable("getSelections");
+	    	var ids = [];
+            for(var index in rows){
+                ids.push(rows[index]['id']);
+            }
+            
+            if( ids.length ) {            	
+            	$.YMessage.question("确认", "你确定要删除选中的数据？", function () {
+            		var str = '';
+        			for( i in ids ) {
+        				str += ids[i] + ((ids.length - 1) == i ?'':',');
+        			}
+        			        			
+        			$.ajax({
+        				type 		: "POST",
+        				dataType 	: "jsonp",
+        				url 		: uri_delRole + "?jsonCallBack=?",
+        				data		: {'ids' : str},
+        				success		: function( result ) {
+        					if(result.code){
+        						$.YMessage.info("提示", "删除成功",function(){
+        		       	            //重新加载数据
+        		                	doSearch();
+        		                });
+        		            }else{
+        		            	$.YMessage.error("错误", result.message, function () {});
+        		            }
+        				}
+        			});
+                });
+    		} else {
+    			$.YMessage.warning("警告", "请选择记录", function () {
+    				
+    	        });
+    		}
+	    };
+        
+		
+	//end seajs	
+	});
+  </script>
+
+</body>

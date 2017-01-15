@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/hlideal-framework-common/hlideal-framework-common.iml" filepath="$PROJECT_DIR$/hlideal-framework-common/hlideal-framework-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hlideal-framework-sys/hlideal-framework-sys.iml" filepath="$PROJECT_DIR$/hlideal-framework-sys/hlideal-framework-sys.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hlideal-framework-sys/hlideal-framework-sys-core/hlideal-framework-sys-core.iml" filepath="$PROJECT_DIR$/hlideal-framework-sys/hlideal-framework-sys-core/hlideal-framework-sys-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hlideal-framework-sys/hlideal-framework-sys-entity/hlideal-framework-sys-entity.iml" filepath="$PROJECT_DIR$/hlideal-framework-sys/hlideal-framework-sys-entity/hlideal-framework-sys-entity.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hlideal-framework-sys/hlideal-framework-sys-web/hlideal-framework-sys-web.iml" filepath="$PROJECT_DIR$/hlideal-framework-sys/hlideal-framework-sys-web/hlideal-framework-sys-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hlideal_framework.iml" filepath="$PROJECT_DIR$/hlideal_framework.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hlideal.framework.core.dao.SysfunctionDao">
+
+	<sql id="sysfunctionColumns">
+		a.id AS "id",
+		a.appid AS "appid",
+		a.parentid AS "parentid",
+		a.funtionkey AS "funtionkey",
+		a.functionname AS "functionname",
+		a.orderno AS "orderno",
+		a.linkurl AS "linkurl",
+		a.iconlink AS "iconlink",
+		a.globalcheck AS "globalcheck",
+		a.checkshow AS "checkshow",
+		a.remark AS "remark",
+		a.deleteflag AS "deleteflag",
+		a.createid AS "createid",
+		a.createname AS "createname",
+		a.createdate AS "createdate",
+		a.updatename AS "updatename",
+		a.updatedate AS "updatedate",
+		a.var01 AS "var01",
+		a.var02 AS "var02",
+		a.var03 AS "var03",
+		a.var04 AS "var04",
+		a.var05 AS "var05"
+	</sql>
+	
+	<sql id="sysfunctionJoins">
+		
+	</sql>
+	
+	<select id="get" resultType="Sysfunction">
+		SELECT 
+		<include refid="sysfunctionColumns"/>
+		FROM sysfunction a
+		<include refid="sysfunctionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Sysfunction">
+		SELECT 
+		<include refid="sysfunctionColumns"/>
+		FROM sysfunction a
+		<include refid="sysfunctionJoins"/>
+		<where>
+			1=1 AND a.deleteflag != #{DEL_FLAG_DELETE}
+			${sqlMap.condition}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Sysfunction">
+		SELECT 
+			<include refid="sysfunctionColumns"/>
+		FROM sysfunction a
+		<include refid="sysfunctionJoins"/>
+		<where>
+			1=1 AND a.deleteflag != #{DEL_FLAG_DELETE}
+			${sqlMap.condition}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sysfunction(
+			id,
+			appid,
+			parentid,
+			funtionkey,
+			functionname,
+			orderno,
+			linkurl,
+			iconlink,
+			globalcheck,
+			checkshow,
+			remark,
+			deleteflag,
+			createid,
+			createname,
+			createdate,
+			updatename,
+			updatedate,
+			var01,
+			var02,
+			var03,
+			var04,
+			var05
+		) VALUES (
+			#{id},
+			#{appid},
+			#{parentid},
+			#{funtionkey},
+			#{functionname},
+			#{orderno},
+			#{linkurl},
+			#{iconlink},
+			#{globalcheck},
+			#{checkshow},
+			#{remark},
+			#{deleteflag},
+			#{createid},
+			#{createname},
+			#{createdate},
+			#{updatename},
+			#{updatedate},
+			#{var01},
+			#{var02},
+			#{var03},
+			#{var04},
+			#{var05}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sysfunction SET 	
+			appid = #{appid},
+			parentid = #{parentid},
+			funtionkey = #{funtionkey},
+			functionname = #{functionname},
+			orderno = #{orderno},
+			linkurl = #{linkurl},
+			iconlink = #{iconlink},
+			globalcheck = #{globalcheck},
+			checkshow = #{checkshow},
+			remark = #{remark},
+			deleteflag = #{deleteflag},
+			createid = #{createid},
+			createname = #{createname},
+			createdate = #{createdate},
+			updatename = #{updatename},
+			updatedate = #{updatedate},
+			var01 = #{var01},
+			var02 = #{var02},
+			var03 = #{var03},
+			var04 = #{var04},
+			var05 = #{var05}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sysfunction SET 
+			deleteflag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="findByUserId" resultType="Sysfunction">
+		SELECT DISTINCT
+			<include refid="sysfunctionColumns"/>
+		FROM sysfunction a
+		LEFT JOIN sysfunction p ON p.id = a.parentid
+		JOIN sysrolefunction rm ON rm.functionid = a.id
+		JOIN sysrole r ON r.id = rm.roleid
+		JOIN sysstaffrole ur ON ur.roleid = r.id
+		JOIN sysstaff u ON u.id = ur.staffid AND u.id = #{userId} AND a.appid = #{appid}  AND a.var01 = #{var01}
+		<choose>
+			<when test="id !=null and id != ''">
+				AND (a.id = #{id} OR a.parentId = #{id})
+			</when>
+		</choose>
+		WHERE a.deleteflag = #{DEL_FLAG_NORMAL} AND r.deleteflag = #{DEL_FLAG_NORMAL} AND u.deleteflag = #{DEL_FLAG_NORMAL} 
+		ORDER BY a.orderno
+	</select>
+	
+	<select id="findByRoleID" resultType="Sysfunction">
+		SELECT DISTINCT
+			<include refid="sysfunctionColumns"/>
+		FROM sysfunction a
+		LEFT JOIN sysfunction p ON p.id = a.parentid
+		JOIN sysrolefunction rm ON rm.functionid = a.id
+		JOIN sysrole r ON r.id = rm.roleid AND r.id=#{var01}
+		WHERE a.deleteflag = #{DEL_FLAG_NORMAL} AND r.deleteflag = #{DEL_FLAG_NORMAL} 
+		ORDER BY a.orderno
+	</select>
+
+	<select id="findMaxId" resultType="Sysfunction">
+		SELECT DISTINCT
+		<include refid="sysfunctionColumns"/>
+		FROM sysfunction a  ORDER BY a.id+0 DESC LIMIT 1
+	</select>
+	
+	
+		
+</mapper>

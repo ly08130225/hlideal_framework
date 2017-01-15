@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hlideal.framework.core.dao.SysroleDao">
+
+	<sql id="sysroleColumns">
+		a.id AS "id",
+		a.roleno AS "roleno",
+		a.name AS "name",
+		a.remark AS "remark",
+		a.deleteflag AS "deleteflag",
+		a.createid AS "createid",
+		a.createname AS "createname",
+		a.createdate AS "createdate",
+		a.updatename AS "updatename",
+		a.updatedate AS "updatedate",
+		a.var01 AS "var01",
+		a.var02 AS "var02",
+		a.var03 AS "var03",
+		a.var04 AS "var04",
+		a.var05 AS "var05"
+	</sql>
+	
+	<sql id="sysroleJoins">
+		
+	</sql>
+	
+	<select id="get" resultType="Sysrole">
+		SELECT 
+		<include refid="sysroleColumns"/>
+		FROM sysrole a
+		<include refid="sysroleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Sysrole">
+		SELECT 
+		<include refid="sysroleColumns"/>
+		FROM sysrole a
+		<include refid="sysroleJoins"/>
+		<where>
+			1=1 AND a.deleteflag != #{DEL_FLAG_DELETE}
+			${sqlMap.condition}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Sysrole">
+		SELECT 
+			<include refid="sysroleColumns"/>
+		FROM sysrole a
+		<include refid="sysroleJoins"/>
+		<where>
+			1=1 AND a.deleteflag != #{DEL_FLAG_DELETE}
+			${sqlMap.condition}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sysrole(
+			id,
+			roleno,
+			name,
+			remark,
+			deleteflag,
+			createid,
+			createname,
+			createdate,
+			updatename,
+			updatedate,
+			var01,
+			var02,
+			var03,
+			var04,
+			var05
+		) VALUES (
+			#{id},
+			#{roleno},
+			#{name},
+			#{remark},
+			#{deleteflag},
+			#{createid},
+			#{createname},
+			#{createdate},
+			#{updatename},
+			#{updatedate},
+			#{var01},
+			#{var02},
+			#{var03},
+			#{var04},
+			#{var05}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sysrole SET 	
+			roleno = #{roleno},
+			name = #{name},
+			remark = #{remark},
+			deleteflag = #{deleteflag},
+			createid = #{createid},
+			createname = #{createname},
+			createdate = #{createdate},
+			updatename = #{updatename},
+			updatedate = #{updatedate},
+			var01 = #{var01},
+			var02 = #{var02},
+			var03 = #{var03},
+			var04 = #{var04},
+			var05 = #{var05}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sysrole SET 
+			deleteflag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+		
+</mapper>

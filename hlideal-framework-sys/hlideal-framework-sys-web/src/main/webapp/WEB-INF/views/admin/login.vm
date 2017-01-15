@@ -1,0 +1,63 @@
+#parse("/admin/common/header-title.vm")
+<link rel="stylesheet" href="${ctxStatic}/css/jquery/jquery-ui.min.css">
+<link rel="stylesheet" href="${ctxStatic}/css/login.css">
+
+<script type="text/javascript" src="${ctxStatic}/js/plugin/validate/jquery.validate.js"></script>
+<script type="text/javascript" src="${ctxStatic}/js/plugin/validate/additional-methods.js"></script>
+<script type="text/javascript" src="${ctxStatic}/js/plugin/validate/messages_zh.js"></script>
+<script type="text/javascript" src="${ctxStatic}/js/plugin/validate/validate.js"></script>
+<script type="text/javascript" src="${ctxStatic}/js/project/login.js"></script>
+<script type="text/javascript">
+	 if(window != top){
+		top.location.href = location.href;
+	}
+</script>
+<body>
+	<meta name="base_url" content="${ctx}" id="project_base_url">
+	
+	<div class="yrkj-login-con">
+	<div class="logo"></div>
+	<input type="hidden" id="message" name="message" value="$!{message}"/>
+		<div class="rel mt10">
+		<form class="user-common-form" id="form" method="post">
+			<div class="login-detail-bg rel"></div>
+			<div class="login-detail">
+				<h2>请登录您的帐户</h2>
+				<div class="login-username">
+					<div class="login-dl-dd">
+						<i></i> 
+						<input type="text" class="inputfocus login-input" name="userName" id="userName" placeholder="用户名" value="admin">	
+						<span class="login-error validate-msg"></span>
+					</div>
+				</div>
+				<div class="login-password">
+					<div class="login-dl-dd">
+						<i></i>
+						<input type="password"  class="inputfocus login-input" id="password" name="password" placeholder="密码" value="111111">
+						<span class="login-error validate-msg"></span>
+					</div>
+				</div>
+									
+				<div class="login-submit">
+					<div class="login-dl-dd">
+						<button type="submit" id="submit" class="login-botton"><span>登录</span></button>
+					</div>
+				</div>
+				<div class="login-a validate-msg" style="display: none;">
+					<div class="login-error">
+						<i></i><span id="zds-error-msg"></span>
+					</div>
+				</div>
+			</div>
+		</form>			
+		</div>			
+	</div>
+	
+
+	<script type="text/javascript">
+		 var message = $("#message").val();
+		 if(message!= null && message != '') {
+		 	alert(message);
+		 }
+	</script>
+</body>

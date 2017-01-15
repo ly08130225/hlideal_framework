@@ -1,0 +1,233 @@
+#parse("/admin/common/header-title.vm")
+<link rel="stylesheet" href="${ctxStatic}/css/jquery/jquery-ui.min.css">
+<link rel="stylesheet" href="${ctxStatic}/css/style.css"/>
+
+<body>
+<div class="yrkj-tabnav-content">
+	<div class="search-bg">
+	    <form action="" class="yui-form">
+	        <dl class="form-item">
+	            <dt class="title">货号：</dt>
+	            <dd class="detail">
+	                <label>
+	                    <input type="text" class="yui-input" name="orderno"  id="search_orderno" />
+	                </label>
+	            </dd>
+	        </dl>
+	        <dl class="form-item">
+	            <dt class="title">结构：</dt>
+	            <dd class="detail">
+	                <label>
+	                    <input id="checkbox_jgcode" type="hidden"
+					       data-url="${dicsearchurl}?jsonCallBack=?&catekey=STRUCTURETYPE" data-valuefield="dickey" data-textfield="dicvalue" data-multiple="false" value=""
+					       class="yui-combobox" style="display: none;">  
+	                </label>
+	            </dd>
+	        </dl><br/>
+	        <dl class="form-item">
+	            <dt class="title">时间段：</dt>
+	            <dd class="detail">
+	                <label>
+	                   	<input id="starttime" name="starttime" type="text"  style="width:150px;" class="yui-date" onclick="WdatePicker()" readonly/> -
+	                   	<input id="endtime" name="endtime" type="text"  style="width:150px;" class="yui-date" onclick="WdatePicker()" readonly/>
+	                </label>
+	            </dd>
+	        </dl>
+	        <dl class="form-item">
+	            <dt class="title"></dt>
+	            <dd class="detail">
+	                <button type="button" class="yrkj-btn btn-blue" id="btn-search">搜索</button>
+                	<button type="reset" class="yrkj-btn btn-gray">重置</button>
+	            </dd>
+	        </dl>  
+	    </form>
+	</div>
+	<table id="tb-dbdatagrid" class="yui-datagrid table-list" zdata-options={"url":"${ctx}/backstage/biz/queryInventoryDetail.htm?jsonCallBack=?","fitColumns":true,"singleSelect":false,"pagination":true,"rowcheck":true,"rownumbers":true,"rows":10,"idField":"id","toolbar":"#btn-applylist","tableCls":"table-list"}>
+        <thead>
+	    <tr>
+	        <th data-options="field:orderno">货号</th>
+	        <th data-options="field:jgcode">结构码</th>
+	        <th data-options="field:jgname">结构名称</th>
+	        <th data-options="field:kcnum">数量</th>
+	        <th data-options="field:kcdate">日期</th>
+	        <th data-options="field:createname">操作人员</th>
+	        <th data-options="field:remark">备注</th>
+	    </tr>
+	    </thread>
+	</table>
+	<div id="btn-applylist" >
+        <a class="yui-toolbar" id="btn-add"  text="增加" iconCls="icon-blue06" buttonCls="btn-operateblue" handler="doNew"></a>
+        <a class="yui-toolbar" id="btn-del" text="删除" iconCls="icon-blue06" buttonCls="btn-operateblue" handler="doDel"></a>
+    </div>
+</div>
+
+<div id="role_form_window" style="display: none;">
+	<div class="clearfix mt20">
+		<form id="role_form"  class="yui-form" method="post" enctype="multipart/form-data"  zdata-options={"url":"${ctx}/backstage/biz/inventoryDetailSaveData.htm?jsonCallBack=?","callBack":"callBackFn"}>
+			<input type="hidden" name="id" id="id" value=""/>
+			<dl class="form-item">
+				<dt class="title sptitle">货号:</dt>
+				<dd class="detail">
+					<label>
+						<input type="text" class="yui-input yui-validatebox"  validate-type="Require" id="orderno" name="orderno" />
+						<i class="require icon-mrequire"></i>
+					</label>
+				</dd>
+			</dl>
+			<dl class="form-item">
+				<dt class="title sptitle">结构:</dt>
+				<dd class="detail">
+					<label>
+						<input type="hidden" name="jgname" id="jgname" value=""/>
+						<input id="jgcode" name="jgcode" type="hidden"
+					       data-url="${dicsearchurl}?jsonCallBack=?&catekey=STRUCTURETYPE" data-textelementid="jgname" data-valuefield="dickey" data-textfield="dicvalue" data-multiple="false" value=""
+					       class="yui-combobox yui-validatebox"  validate-type="Require" style="display: none;">
+					    <i class="require icon-mrequire"></i>
+					</label>
+				</dd>
+			</dl>
+			<dl class="form-item">
+				<dt class="title sptitle">日期:</dt>
+				<dd class="detail">
+					<label>
+						<input id="kcdate" name="kcdate" type="text"  style="width:180px;" class="yui-date  yui-validatebox" validate-type="Require" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly/>
+						<i class="require icon-mrequire"></i>
+					</label>
+				</dd>
+			</dl>
+			<dl class="form-item">
+				<dt class="title sptitle">数量:</dt>
+				<dd class="detail">
+					<label>
+						<input type="text" class="yui-input yui-validatebox"  validate-type="Require" id="kcnum" name="kcnum" />
+						<i class="require icon-mrequire"></i>
+					</label>
+				</dd>
+			</dl>
+			<dl class="form-item block">
+				<dt class="title sptitle">备注:</dt>
+				<dd class="detail">
+					<label>
+						<textarea type="text" class="yui-area" id="remark" name="remark" /></textarea>
+					</label>
+				</dd>
+			</dl>			
+		</form>
+	</div>
+</div>
+
+<script>
+	var uri_delRole = '${ctx}/backstage/biz/inventoryDetailDeleteData.htm';
+	seajs.use(['jquery', 'yrkj/jquery.yrkj.form', 'yrkj/jquery.yrkj.dialog','yrkj/jquery.yrkj.page.callback','yrkj/jquery.yrkj.message','datepicker'],
+				function($,YUI,Ydialog,CALLBACK,YUI_MESSAGE_CLIENT){
+		//seajs start		
+		$(function() {		
+			$("#role_form_window").show();
+			$("#role_form_window").Ydialog({
+	            width: 800,
+	            height: 400,
+	            title: '新增半成品库存',
+	            closed:true,
+	            buttons:[{
+	                id:'message-btn',
+	                text:'确定',
+	                buttonCls:'btn-blue',
+	                handler:function(){
+	                	$("#role_form").submit();
+	                }
+	            },{
+	                id:'message-btn',
+	                text:'取消',
+	                buttonCls:'btn-gray',
+	                handler:function(){
+	                	$("#role_form_window").Ydialog("close");
+	                }
+	            }]
+	        });
+	        
+	        $.YUI.init();
+			
+		});
+		
+		$("#btn-search").click(function () {
+            doSearch();
+        });
+        
+        function doSearch() {
+        	$('#tb-dbdatagrid').YTable("reload", {
+            	orderno:$('#search_orderno').val(),
+            	jgcode:$('#checkbox_jgcode').val(),
+            	starttime:$('#starttime').val(),  
+            	endtime:$('#endtime').val()      	
+            });
+        }
+        
+        CALLBACK.callBackFn=function(data){
+      	    if(data.code){                
+                $.YMessage.info("提示", "操作成功", function () {
+                	//关闭弹出窗
+                	$("#role_form_window").Ydialog("close");
+                	//重新加载数据
+                	doSearch();
+                });
+            }else{
+            	$.YMessage.error("错误", data.msg, function () {
+            		
+                });
+            }
+		}
+		
+        //新增
+	    CALLBACK.doNew=function(){	    	
+	    	//清除
+	    	$('#role_form')[0].reset();
+			$('#id').val('');
+	    	$("#role_form_window").Ydialog("open");
+        };
+	    
+        //删除
+	    CALLBACK.doDel= function(){
+	    	
+	    	var rows = $('#tb-dbdatagrid').YTable("getSelections");
+	    	var ids = [];
+            for(var index in rows){
+                ids.push(rows[index]['id']);
+            }
+            
+            if( ids.length ) {            	
+            	$.YMessage.question("确认", "你确定要删除选中的数据？", function () {
+            		var str = '';
+        			for( i in ids ) {
+        				str += ids[i] + ((ids.length - 1) == i ?'':',');
+        			}
+        			        			
+        			$.ajax({
+        				type 		: "POST",
+        				dataType 	: "jsonp",
+        				url 		: uri_delRole + "?jsonCallBack=?",
+        				data		: {'ids' : str},
+        				success		: function( result ) {
+        					if(result.code){
+        						$.YMessage.info("提示", "删除成功",function(){
+        		       	            //重新加载数据
+        		                	doSearch();
+        		                });
+        		            }else{
+        		            	$.YMessage.error("错误", result.message, function () {});
+        		            }
+        				}
+        			});
+                });
+    		} else {
+    			$.YMessage.warning("警告", "请选择记录", function () {
+    				
+    	        });
+    		}
+	    };
+        
+		
+	//end seajs	
+	});
+  </script>
+
+</body>

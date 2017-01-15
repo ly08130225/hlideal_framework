@@ -1,0 +1,203 @@
+#parse("/admin/common/header-title.vm")
+<link rel="stylesheet" href="${ctxStatic}/css/jquery/jquery-ui.min.css">
+<link rel="stylesheet" href="${ctxStatic}/css/style.css"/>
+
+<body>
+<div class="frm-content frm-bottom">
+    <div class="page-box">
+        <div id="treeRolefunction" class="ztree" style="height:400px; overflow:auto;"></div>
+
+        <div id="btn-div">
+            <button class="btn-saveblue mr10" id="btn-save"><i class="icon-save"></i>新增下级节点</button>
+            <button class="btn-saveblue mr10" id="btn-save1"><i class="icon-save"></i>新增同级节点</button>
+            <button class="btn-saveblue mr10" id="btn-save2"><i class="icon-save"></i>保存节点</button>
+            <button class="btn-returngray" id="btn-cancel"><i class="icon-return"></i>删除节点</button>
+        </div>
+    </div>
+</div>
+<script>
+
+    var saverolefunction_url = '${ctx}/backstage/sys/sysFunctionSave.htm';
+    var num = ${num};
+    seajs.use(['jquery', 'yrkj/jquery.yrkj.form', 'yrkj/jquery.yrkj.dialog','yrkj/jquery.yrkj.page.callback','yrkj/jquery.yrkj.message','yrkj/menu',
+                'yrkj/jquery.yrkj.loading',
+            'yrkj/jquery.yrkj.combotree'],
+            function($,YUI,Ydialog,CALLBACK,YUI_MESSAGE_CLIENT,MENU,Loading){
+                var setting = {
+                    edit: {
+                        enable: true,
+                        editNameSelectAll:true,
+                        removeTitle:'删除',
+                        renameTitle:'重命名'
+                    },
+                    check: {
+                        enable: true,
+                        chkStyle: "checkbox",
+                        chkboxType: { "Y": "", "N": "" },
+                        radioType:"all"
+                    },
+                    data: {
+                        simpleData: {
+                            enable: true
+                        }
+                    },
+                    callback:{
+                        onMouseUp: zTreeOnMouseUp
+                    }
+                };
+                function zTreeOnMouseUp(event, treeId, treeNode) {
+                    var treeObj = $.fn.zTree.getZTreeObj("treeRolefunction");
+                    treeObj.editName(treeNode);
+                }
+
+
+
+                //seajs start
+                $(function() {
+                    $.ajax({
+                        type:"post",
+                        url: "/admin/backstage/getUserFunctions.htm?appId="+${appId},
+                        dataType : 'json',
+                        success:function(data){
+
+                        $.fn.zTree.init($("#treeRolefunction"), setting, data.result);
+                        },error:function(XmlHttpRequest,textStatus, errorThrown){
+
+                        }
+                    });
+
+                });
+
+                $('#btn-save').YButon({
+                    text: "新增下级节点",//按钮内容
+                    iconCls: 'icon-save',//按钮图标
+                    buttonCls: 'btn-saveblue',
+                    handler: function () {
+                        var treeObj = $.fn.zTree.getZTreeObj("treeRolefunction");
+
+                        var rows = $('#treeRolefunction').find(".checkbox_true_full");
+                        rows.length==0?rows = $('#treeRolefunction').find(".checkbox_true_part"):[];
+                        if(rows.length==0){
+                            $.YMessage.warning("警告", "请选择记录", function () {});
+                            return;
+                        } else {
+                            var parentNode = $.fn.zTree.getZTreeObj("treeRolefunction").getCheckedNodes(); //获取选中项
+                            var newNode = new ZtreeNode(num+1+'a',parentNode[0].id,'新增节点');
+                            num=num+1;
+                            $.fn.zTree.getZTreeObj("treeRolefunction").addNodes(parentNode[0], newNode,true);
+                        }
+                        treeObj.expandAll(true);
+
+                    }
+                });
+
+                $('#btn-save1').YButon({
+                    text: "新增同级节点",//按钮内容
+                    iconCls: 'icon-save',//按钮图标
+                    buttonCls: 'btn-saveblue',
+                    handler: function () {
+                        var treeObj = $.fn.zTree.getZTreeObj("treeRolefunction");
+
+                        var rows = $('#treeRolefunction').find(".checkbox_true_full");
+                        rows.length==0?rows = $('#treeRolefunction').find(".checkbox_true_part"):[];
+                        if(rows.length==0){
+                            $.YMessage.warning("警告", "请选择记录", function () {});
+                            return;
+                        } else {
+                            var parentNode = $.fn.zTree.getZTreeObj("treeRolefunction").getCheckedNodes(); //获取选中项
+                            var newNode = new ZtreeNode(num+1+'a',parentNode[0].pId,'新增节点');
+                            num = num+1;
+                            $.fn.zTree.getZTreeObj("treeRolefunction").addNodes(parentNode[0].getParentNode()==null?null:parentNode[0].getParentNode(), newNode,true);
+                        }
+                        treeObj.expandAll(true);
+
+                    }
+                });
+
+                $('#btn-save2').YButon({
+                    text: "保存节点",//按钮内容
+                    iconCls: 'icon-save',//按钮图标
+                    buttonCls: 'btn-saveblue',
+                    handler: function () {
+                            var treeData = $.fn.zTree.getZTreeObj("treeRolefunction").getNodes();
+                            var treevalue='';
+                            var _i = 0;
+                            var obj =new Array();
+                            $.each(treeData, function (i, item) {
+                                pushNode(obj,item);
+                            });
+                            //保存相关信息
+                            var roleid =  $("#roleid").val();
+                            var obj_loading = Loading.show("page-box");
+                            $.ajax({
+                                async: true,
+                                type: "get",
+                                dataType: "jsonp",
+                                url: saverolefunction_url + "?jsonCallBack=?",
+                                data: {roleid: roleid, objs: JSON.stringify(obj)},
+                                crossDomain: true,
+                                complete: function () {
+                                    //关闭遮挡层
+                                    Loading.hide(obj_loading);
+                                },
+                                success: function (data) {
+                                    if(data.code){
+                                        $.YMessage.success("提示", "保存成功");
+                                        window.parent.window.$('.icon-dclose').click();
+                                    }
+                                },
+                                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                    $.YMessage.warning("提示", "网络请求出错,请联系管理员");
+                                }
+                            });
+
+                        }
+                });
+
+                $('#btn-cancel').YButon({
+                    text: "删除节点",//按钮内容
+                    iconCls: 'icon-return',//按钮图标
+                    buttonCls: 'btn-returngray',
+                    handler: function () {
+                        var rows = $('#treeRolefunction').find(".checkbox_true_full");
+                        rows.length==0?rows = $('#treeRolefunction').find(".checkbox_true_part"):[];
+                        if(rows.length==0){
+                            $.YMessage.warning("警告", "请选择记录", function () {});
+                            return;
+                        }else{
+                            var treeObj = $.fn.zTree.getZTreeObj("treeRolefunction");
+                            var nodes = treeObj.getCheckedNodes();
+                            if(nodes[0].isParent){
+                                treeObj.removeChildNodes(nodes[0]);
+                            }
+                            treeObj.removeNode(nodes[0]);
+                        }
+                    }
+                });
+
+                function pushNode(obj,item) {
+                    obj.push(new ZtreeNode(item.id,item.pId,item.name));
+                    if(typeof(item.children)!='undefined' && item.children.length>0){
+                        var childrenData = item.children;
+                        for(var _j=0;_j<childrenData.length;_j++){
+                            if(childrenData[_j].isParent){
+                                pushNode(obj,childrenData[_j])
+                            }else{
+                                obj.push(new ZtreeNode(childrenData[_j].id,childrenData[_j].pId,childrenData[_j].name));
+                            }
+                        }
+                    }
+                }
+                //定义ztree的节点类
+                function ZtreeNode(id, pId, name) {
+                    this.id = id;
+                    this.pId = pId;
+                    this.name = name;
+                }
+                
+
+                //end seajs
+            });
+</script>
+
+</body>

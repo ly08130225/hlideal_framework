@@ -1,0 +1,68 @@
+#parse("/admin/common/header-title.vm")
+<link rel="stylesheet" href="${ctxStatic}/css/style.css"/>
+
+<script src="${ctxStatic}/js/vendor-modules/sea.js"></script>
+<script src="${ctxStatic}/js/global.js"></script>
+<script src="${ctxStatic}/js/yrkj/iframe.js"></script>
+<script src="${ctxStatic}/js/menu.js"></script>
+<script src="${ctxStatic}/js/utils.js"></script>
+
+<body style="overflow-y: hidden">
+<div class="container">
+    <div class="index-menu" id="sidebar">
+        <div class="logo">
+            <img src="${ctxStatic}/images/logo.png" alt="**管理系统"/>
+        </div>
+        <div class="index-tab">
+            <ul class="tabs" id="index-tabs">
+                <li class="tabs-on"><a href="javascript:void(0);">
+                    <i class="icon-tab01"></i>管理系统</a></li>
+                <li><a href="javascript:void(0);"><i class="icon-tab02"></i>快捷操作</a></li>
+            </ul>
+            <div class="tabcontents" id="index-tabcontents" style="overflow: auto;">
+                <div id="tabview1">
+                     <div id="menu"></div>
+                </div>
+                <div id="tabview2" style="display: none">                   
+                    <ul class="col-two clearfix">                       
+                        <li>
+                            <a title="新增快捷标签" href="javascript:void(0);" class="last-item"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="index-content" id="main">
+        <div class="top">
+            <a href="javascript:void(0);" id="menuFolder"><i class="icon-fold"></i></a>
+                <span class="top-welcome"><i class="icon-user"></i>
+                    <strong style="color:red; font-style: normal;">$!userUtils.getUsername()</strong>,欢迎登陆**管理系统
+                </span>
+                <span class="fr">
+                       <a href="${ctx}/loginout.htm"><i class="icon-top02"></i>退出</a>
+                </span>
+        </div>
+        <div class="dynamic-tab">
+            <div class="dynamic-nav">
+                <a href="javascript:void (0);" id="arrowLeft"
+                   onclick="moveLeft()" class="tabs-prev "><i class="single-tabsprev"></i></a>
+                <a href="javascript:void (0);" id="arrowRight"
+                   onclick="moveRight()" class="tabs-next "><i class="single-tabsnext"></i></a>
+                <ul class="tabs" id="dynamic-tabs">
+                   <li class="tabs-on"><a href="${ctx}/introduce.htm" target="index" class="home"><i
+                            class="single-home"></i></a></li>
+                </ul>
+            </div>
+            <div class="tabcontents" id="dynamic-tabcontents">
+                <iframe id="iframe1" width="100%" frameborder="0" allowtransparency="true"
+                        src="${ctx}/introduce.htm" class="yui-iframe" name="index"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="${ctxStatic}/js/project/home.js"></script>
+
+</body>
+</html>

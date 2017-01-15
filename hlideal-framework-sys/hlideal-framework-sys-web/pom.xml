@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.hlideal</groupId>
+		<artifactId>hlideal-framework-sys</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>hlideal-framework-sys-web</artifactId>
+	<name>hlideal-framework-sys-web</name>
+	<packaging>war</packaging>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>${jetty-server.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jsp-2.1-glassfish</artifactId>
+			<version>2.1.v20100127</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.hlideal</groupId>
+			<artifactId>hlideal-framework-sys-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.12</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>hlideal-framework-sys-web</finalName>
+		<defaultGoal>compile</defaultGoal>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<source>1.7</source>
+						<target>1.7</target>
+						<encoding>utf-8</encoding>
+					</configuration>
+				</plugin>
+				<!-- 配置 maven 的 jetty 插件 -->
+				<plugin>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>jetty-maven-plugin</artifactId>
+					<version>7.2.2.v20101205</version>
+					<configuration>
+						<systemProperties>
+				            <systemProperty>
+				                <name>org.mortbay.util.URI.charset</name>
+				                <value>UTF-8</value>
+				            </systemProperty>
+				        </systemProperties>
+						<!-- 指定 root context 若在这里指定为/jetty，那么访问时就用http://localized:8080/jetty 
+							进行访问 -->
+						<webAppConfig>
+							<contextPath>/front</contextPath>
+						</webAppConfig>
+						<!-- 指定额外需要监控变化的文件或文件夹，主要用于热部署中的识别文件更新 -->
+						<scanTargetPatterns>
+							<scanTargetPattern>
+								<directory>src</directory>
+								<includes>
+									<include>**/*.java</include>
+									<include>**/*.properties</include>
+								</includes>
+								<!-- <excludes> <exclude>**/*.xml</exclude> <exclude>**/myspecial.properties</exclude> 
+									</excludes> -->
+							</scanTargetPattern>
+						</scanTargetPatterns>
+						<!-- 指定监控的扫描时间间隔，0为关闭jetty自身的热部署，主要是为了使用jrebel -->
+						<scanIntervalSeconds>0</scanIntervalSeconds>
+						<!--指定web页面的文件夹 -->
+						<webAppSourceDirectory>${basedir}/src/main/webapp</webAppSourceDirectory>
+					</configuration>
+				</plugin>
+
+				<!-- jerebel maven 插件，用于生成jrebel.xml -->
+				<plugin>
+					<groupId>org.zeroturnaround</groupId>
+					<artifactId>jrebel-maven-plugin</artifactId>
+					<version>1.1.5</version>
+					<executions>
+						<execution>
+							<id>generate-rebel-xml</id>
+							<phase>process-resources</phase>
+							<goals>
+								<goal>generate</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<!--指定生成的jrebel.xml放在哪里， 要求放在web应用的 classpath下 -->
+						<rebelXmlDirectory>${basedir}/src/main/webapp/WEB-INF/classes</rebelXmlDirectory>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<!--指定编译后文件的存放路径，因为jetty默认src/main/webapp为 web应用的根目录而 maven compile 目标后的默认classpath 
+			在target文件夹下，就造成jrebel.xml无法兼顾 jetty 默认的是webapp中的classes为 web 应用的根目录， 而maven 
+			默认是target 目录所以需要修改该maven的默认classes目录。 -->
+		<outputDirectory>${basedir}/src/main/webapp/WEB-INF/classes</outputDirectory>
+	</build>
+</project>

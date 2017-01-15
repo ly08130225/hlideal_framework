@@ -99,32 +99,32 @@ define(function(require,exports,module){
     };
 });
 
-function uploadProgress(evt) {
-    $("input[type=file]").attr("disabled","disabled");
-    if (evt.lengthComputable) {
-        var progressId = 'proDownFile_' + Math.round(100);
-        var pUipId = 'pTip' + Math.round(100);
-        var percentComplete = Math.round(evt.loaded * 100 / evt.total);
-        var percent = evt.loaded;
-
-        var html = '<div>' +
-            '<progress value="0" max="'+evt.total+'" id="'+progressId+'"></progress>'+
-            '<span>'+$('#file_').get(0).files[0].name+'</span>'+
-            '<p id="'+pUipId+'">%</p>' +
-            '</div>';
-        if($("#_upload_form dl").find('div progress').length==0){
-            $("#_upload_form dl").after(html);
-        }else{
-            $("#_upload_form dl").lastChild.after(html);
-        }
-
-        document.getElementById(progressId).value = percent;
-        document.getElementById(pUipId).innerHTML = percentComplete==100?"已完成":"正在上传"+percentComplete+"%";
-    }
-    else {
-        document.getElementById('progressNumber').innerHTML = 'unable to compute';
-    }
-}
+// function uploadProgress(evt) {
+//     $("input[type=file]").attr("disabled","disabled");
+//     if (evt.lengthComputable) {
+//         var progressId = 'proDownFile_' + Math.round(100);
+//         var pUipId = 'pTip' + Math.round(100);
+//         var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+//         var percent = evt.loaded;
+//
+//         var html = '<div>' +
+//             '<progress value="0" max="'+evt.total+'" id="'+progressId+'"></progress>'+
+//             '<span>'+$('#file_').get(0).files[0].name+'</span>'+
+//             '<p id="'+pUipId+'">%</p>' +
+//             '</div>';
+//         if($("#_upload_form dl").find('div progress').length==0){
+//             $("#_upload_form dl").after(html);
+//         }else{
+//             $("#_upload_form dl").lastChild.after(html);
+//         }
+//
+//         document.getElementById(progressId).value = percent;
+//         document.getElementById(pUipId).innerHTML = percentComplete==100?"已完成":"正在上传"+percentComplete+"%";
+//     }
+//     else {
+//         document.getElementById('progressNumber').innerHTML = 'unable to compute';
+//     }
+// }
 
 function showFileList(files) {
     if(!files) {
